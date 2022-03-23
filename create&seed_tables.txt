@@ -1,0 +1,40 @@
+--CREATE DATABASE Company;
+
+CREATE TABLE Project(
+	ProjectId int IDENTITY PRIMARY KEY, 
+	Name varchar(50),
+	Description varchar(500),
+	StartDate date,
+	EndDate date,
+	Status varchar(50),	
+);
+CREATE TABLE Person(
+	PersonId int IDENTITY PRIMARY KEY,  
+	Name varchar(25),  
+	Surname varchar(45),
+	Address varchar(200),
+	DOB date,
+	ProjectId int,
+	FOREIGN KEY (ProjectId) REFERENCES Project(ProjectId)
+);
+
+CREATE TABLE Developer(
+	DeveloperId int IDENTITY PRIMARY KEY,  
+	Type varchar(20),
+	Salary decimal(10,2),
+	StartDate date,
+	PersonId int UNIQUE,
+	FOREIGN KEY (PersonId) REFERENCES Person(PersonId)
+);
+
+INSERT INTO Project (Name, Description, StartDate, EndDate, Status) VALUES ('Webshop app','Create full webshop app','2022-3-20','', 'In progress');
+INSERT INTO Project (Name, Description, StartDate, EndDate, Status) VALUES ('Fronted rearrange','Rearrange the fronted part of the application','2022-2-22','2022-3-22','Done');
+INSERT INTO Project (Name, Description, StartDate, EndDate, Status) VALUES ('Web page','Create 6 page designs for website','2022-3-20','', 'Not started');
+
+INSERT INTO Person (Name, Surname, Address, DOB, ProjectId) VALUES ('Marko', 'Maric', 'J. J. Strossmaeyer 24, Osijek','1991-12-1', (SELECT ProjectId FROM Project WHERE Name='Webshop app'));
+INSERT INTO Person (Name, Surname, Address, DOB, ProjectId) VALUES ('Zarko','Zaric','K. P. Svacica 1, Osijek','1965-5-23', (SELECT ProjectId FROM Project WHERE Name='Fronted rearrange'));
+INSERT INTO Person (Name, Surname, Address, DOB, ProjectId) VALUES ('Pero','Peric','Rokova 23, Osijek','1987-7-14', (SELECT ProjectId FROM Project WHERE Name='Webshop app'));
+
+INSERT INTO Developer (Type, Salary, StartDate, PersonId) VALUES ('Backend','4500','2022-3-20', (SELECT PersonId FROM Person WHERE Name='Marko'));
+INSERT INTO Developer (Type, Salary, StartDate, PersonId) VALUES ('Backend_leader','5500','2020-2-23',(SELECT PersonId FROM Person WHERE Name='Zarko'));
+INSERT INTO Developer (Type, Salary, StartDate, PersonId) VALUES ('Frontend','6000','2020-2-22',(SELECT PersonId FROM Person WHERE Name='Pero'));
